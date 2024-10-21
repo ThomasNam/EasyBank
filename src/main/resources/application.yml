@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: easybank
+
+  datasource:
+    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:easybank}
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:mariadbtest}
+
+  jpa:
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        format_sql: ${HIBERNATE_FORMAT_SQL:true}
+
+
+  security:
+#    user:
+#      name: test
+#      password: test
