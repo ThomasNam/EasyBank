@@ -18,3 +18,8 @@ spring:
 #    user:
 #      name: test
 #      password: test
+
+server:
+  servlet:
+    session:
+      timeout: 20m

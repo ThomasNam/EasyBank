@@ -1,5 +1,7 @@
 package kr.hanisoft.easybank.config;
 
+import kr.hanisoft.easybank.exceptionhandling.CustomAccessDeniedHandler;
+import kr.hanisoft.easybank.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -21,18 +23,24 @@ public class ProjectSecurityConfig
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf (AbstractHttpConfigurer::disable);
+		http.sessionManagement ((smc) -> smc.invalidSessionUrl ("/invalidSession").maximumSessions (1).maxSessionsPreventsLogin (true));
 
 		http.authorizeHttpRequests ((requests) ->
 				requests
 						.requestMatchers ("/myAccount", "/myBalance", "/myCards", "/myLoans").authenticated ()
-						.requestMatchers ("/notices", "/contact", "/error", "/register").permitAll ()
+						.requestMatchers ("/notices", "/contact", "/error", "/register", "/invalidSession").permitAll ()
 		);
 
 		// http.formLogin (AbstractHttpConfigurer::disable);
 		http.formLogin (Customizer.withDefaults ());
 
 		// http.httpBasic (AbstractHttpConfigurer::disable);
-		http.httpBasic (Customizer.withDefaults ());
+		http.httpBasic ((hbc) -> hbc.authenticationEntryPoint (new CustomBasicAuthenticationEntryPoint ()));
+		http.exceptionHandling ((ehc) -> ehc
+				.accessDeniedHandler (new CustomAccessDeniedHandler ())
+				// .accessDeniedPage ("/denied")
+		);
+		// http.exceptionHandling ((ehc) -> ehc.authenticationEntryPoint (new CustomBasicAuthenticationEntryPoint ()));
 
 		return http.build ();
 	}
