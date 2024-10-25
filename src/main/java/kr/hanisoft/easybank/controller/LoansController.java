@@ -1,16 +1,29 @@
 package kr.hanisoft.easybank.controller;
 
+import kr.hanisoft.easybank.model.Loans;
+import kr.hanisoft.easybank.repository.LoanRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("")
-public class LoansController
-{
+@RequiredArgsConstructor
+public class LoansController {
+
+	private final LoanRepository loanRepository;
+
 	@GetMapping("/myLoans")
-	public String myLoans()
-	{
-		return "myLoans";
+	public List<Loans> getLoanDetails(@RequestParam long id) {
+		List<Loans> loans = loanRepository.findByCustomerIdOrderByStartDtDesc(id);
+		if (loans != null) {
+			return loans;
+		} else {
+			return null;
+		}
 	}
+
 }

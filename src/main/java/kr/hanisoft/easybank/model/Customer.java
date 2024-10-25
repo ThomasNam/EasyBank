@@ -8,7 +8,7 @@ import lombok.Setter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Getter @Setter

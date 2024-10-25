@@ -1,16 +1,32 @@
 package kr.hanisoft.easybank.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import kr.hanisoft.easybank.model.Contact;
+import kr.hanisoft.easybank.repository.ContactRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.Random;
 
 @RestController
 @RequestMapping("")
+@RequiredArgsConstructor
 public class ContactController
 {
-	@GetMapping("/contact")
-	public String myContact()
+	private final ContactRepository contactRepository;
+
+	@PostMapping("/contact")
+	public Contact saveContactInquiryDetails (@RequestBody Contact contact)
 	{
-		return "myContact";
+		contact.setContactId (getServiceReqNumber ());
+		contact.setCreateDt (new Date (System.currentTimeMillis ()));
+		return contactRepository.save (contact);
+	}
+
+	public String getServiceReqNumber ()
+	{
+		Random random = new Random ();
+		int ranNum = random.nextInt (999999999 - 9999) + 9999;
+		return "SR" + ranNum;
 	}
 }
